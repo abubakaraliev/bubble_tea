@@ -17,6 +17,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from BubbleTea.views import (
+    home_page,
+    profile_page,
+    register_page,
+    login_page
+)
+
 urlpatterns = [
+    path('', home_page),
+    path('register/', register_page),
+    path('login/', login_page),
+    path('profile/', profile_page),
     path('admin/', admin.site.urls),
+
 ]
