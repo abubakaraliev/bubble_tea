@@ -26,9 +26,9 @@ from BubbleTea.views import (
 
 urlpatterns = [
     path('', home_page),
-    path('register/', register_page),
-    path('login/', login_page),
-    path('profile/', profile_page),
+    path('register/', register_page, name="register"),
+    path('login/', login_page, name="login"),
+    path('profile/', profile_page, name="profile"),
     path('admin/', admin.site.urls),
 
 ]
