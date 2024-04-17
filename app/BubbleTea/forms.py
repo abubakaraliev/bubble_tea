@@ -10,8 +10,12 @@ class CreateUserForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'password1', 'password2']
 
-
 class LoginUserForm(AuthenticationForm):
     class Meta:
         model = User
         fields = ['username', 'password']
+
+class ProfileUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password']
