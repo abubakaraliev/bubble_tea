@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/login.css">
+    <title>Login</title>
+</head>
+<body>
+    <!-- <h1>This is a Login Page</h1> -->
+
+    <div class="head">
+        <div class="container">
+            <div class="title">
+                <h1>sign in</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="container">
+                <form method="POST" action="{% url "profile" %}">
+                    {% csrf_token %}
+                    <div class="username">
+                        {{ form.username.label }}
+                        <div class="clear"></div>
+                        {{ form.username }}
+                    </div>
+                    <div class="pass">
+                        {{ form.password.label }}
+                        <div class="clear"></div>
+                        {{ form.password }}
+                    </div>
+                    <div class="submit">
+                        <input type="submit" value="sign in">
+                    </div>
+                    {% for message in messages %}
+                        <p id="messages">{{message}}</p>
+                    {% endfor %}
+                </form>
+        </div>
+    </div>
+</body>
+</html>

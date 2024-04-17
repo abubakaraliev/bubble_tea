@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/profile.css">
+    <title>profile</title>
+</head>
+<body>
+    <!-- <h1>This is a Register Page</h1> -->
+
+    <div class="head">
+        <div class="container">
+            <div class="title">
+                <h1>Profile</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="container">
+            <form method="POST" action="{% url 'profile' %}">
+                {% csrf_token %}
+                <div class="username">
+                    {{ form.username.label }}
+                    <div class="clear"></div>
+                    {{ form.username }}
+                </div>
+                <div class="email">
+                    {{ form.email.label }}
+                    <div class="clear"></div>
+                    {{ form.email }}
+                </div>
+                <div class="phone">
+                    {{ form.phone.label }}
+                    <div class="clear"></div>
+                    {{ form.phone }}
+                </div>
+                <div class="address">
+                    {{ form.address.label }}
+                    <div class="clear"></div>
+                    {{ form.address }}
+                </div>
+                <div class="postcode">
+                    {{ form.postcode.label }}
+                    <div class="clear"></div>
+                    {{ form.postcode }}
+                </div>
+                <div class="city">
+                    {{ form.city.label }}
+                    <div class="clear"></div>
+                    {{ form.city }}
+                </div>
+                <div class="submit">
+                    <input type="submit" value="Submit">
+                </div>
+                {% for message in messages %}
+                    <p id="messages">{{ message }}</p>
+                {% endfor %}
+            </form>            
+        </div>
+    </div>
+</body>
+</html>
