@@ -1,64 +1,93 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/profile.css">
+    <link rel="stylesheet" href="/static/css/profile.css">
     <title>profile</title>
 </head>
+
 <body>
     <!-- <h1>This is a Register Page</h1> -->
 
-    <div class="head">
-        <div class="container">
-            <div class="title">
-                <h1>Profile</h1>
+    <div class="wrapper">
+        <div class="content">
+            <div class="head">
+                <div class="container">
+                    <div class="title">
+                        <h1>Account Settings</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <form method="POST" action="{% url 'profile' %}">
+                    {% csrf_token %}
+                    <div class="username">
+                        <label for="username">username</label>
+                        <input type="text" placeholder="Enter username" name="username" id="username" required>
+                    </div>
+                    <div class="email">
+                        <label for="email">email</label>
+                        <input type="email" placeholder="Enter Email" name="email" id="email" required>
+                    </div>
+                    <div class="pass">
+                        <label for="password">password</label>
+                        <input type="password" placeholder="Enter password" name="password" id="password" required>
+                    </div>
+                    <div class="submit">
+                        <input type="submit" value="Update">
+                    </div>
+                    {% for message in messages %}
+                    <p id="messages">{{ message }}</p>
+                    {% endfor %}
+                </form>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="head">
+                <div class="container">
+                    <div class="title">
+                        <h1>Delivery Information</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <form method="POST" action="{% url 'profile' %}">
+                    {% csrf_token %}
+                    <div class="lastname">
+                        <label for="lastname">lastname</label>
+                        <input type="text" placeholder="Enter lastname" name="lastname" id="lastname" required>
+                    </div>
+                    <div class="firstname">
+                        <label for="firstname">firstname</label>
+                        <input type="text" placeholder="Enter firstname" name="firstname" id="firstname" required>
+                    </div>
+                    <div class="phone">
+                        <label for="phone">phone</label>
+                        <input type="text" placeholder="Enter phone" name="phone" id="phone" required>
+                    </div>
+                    <div class="address">
+                        <label for="address">address</label>
+                        <input type="text" placeholder="Enter address" name="address" id="address" required>
+                    </div>
+                    <div class="postcode">
+                        <label for="postcode">postcode</label>
+                        <input type="text" placeholder="Enter postcode" name="postcode" id="postcode" required>
+                    </div>
+                    <div class="city">
+                        <label for="city">city</label>
+                        <input type="text" placeholder="Enter city" name="city" id="city" required>
+                    </div>
+                    <div class="submit">
+                        <input type="submit" value="Submit">
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-
-    <div class="content">
-        <div class="container">
-            <form method="POST" action="{% url 'profile' %}">
-                {% csrf_token %}
-                <div class="username">
-                    {{ form.username.label }}
-                    <div class="clear"></div>
-                    {{ form.username }}
-                </div>
-                <div class="email">
-                    {{ form.email.label }}
-                    <div class="clear"></div>
-                    {{ form.email }}
-                </div>
-                <div class="phone">
-                    {{ form.phone.label }}
-                    <div class="clear"></div>
-                    {{ form.phone }}
-                </div>
-                <div class="address">
-                    {{ form.address.label }}
-                    <div class="clear"></div>
-                    {{ form.address }}
-                </div>
-                <div class="postcode">
-                    {{ form.postcode.label }}
-                    <div class="clear"></div>
-                    {{ form.postcode }}
-                </div>
-                <div class="city">
-                    {{ form.city.label }}
-                    <div class="clear"></div>
-                    {{ form.city }}
-                </div>
-                <div class="submit">
-                    <input type="submit" value="Submit">
-                </div>
-                {% for message in messages %}
-                    <p id="messages">{{ message }}</p>
-                {% endfor %}
-            </form>            
-        </div>
-    </div>
 </body>
+
 </html>

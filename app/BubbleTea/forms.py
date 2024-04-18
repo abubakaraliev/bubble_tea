@@ -1,21 +1,24 @@
 from django import forms
-from django.forms import ModelForm
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.forms import AuthenticationForm
+from .models import newUser, loginForm, accountUpdate ,userInformations
 
 
-class CreateUserForm(UserCreationForm):
+
+class CreateUserForm(forms.ModelForm):
     class Meta:
-        model = User
-        fields = ['username', 'email', 'password1', 'password2']
+        model = newUser
+        fields = ['username', 'email', 'password']
 
-class LoginUserForm(AuthenticationForm):
+class LoginUserForm(forms.ModelForm):
     class Meta:
-        model = User
+        model = loginForm
         fields = ['username', 'password']
+
+class AccountUserForm(forms.ModelForm):
+    class Meta:
+        model = accountUpdate
+        fields = ['username', 'email', 'password']
 
 class ProfileUserForm(forms.ModelForm):
     class Meta:
-        model = User
-        fields = ['username', 'email', 'password']
+        model = userInformations
+        fields = ['firstname', 'lastname', 'phone', 'address', 'postcode', 'city']

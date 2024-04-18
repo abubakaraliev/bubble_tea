@@ -1,4 +1,8 @@
-
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
 .container 
 {
     width:600px;
@@ -22,26 +26,42 @@
     margin: -29px 0 0 0;
 }
 
-form .username .clear
+form .email .clear
 {
     clear:both;
 
 }
-.username,.pass
+.username, .email, .pass, .lastname, .firstname, .address, .phone, .postcode, .city
 {
+    display: flex;
+    flex-direction: column;
     margin:12px 0 13px 20px;
     padding:12px 0 0 0;
 }
+.email label,
 .username label,
-.pass label
+.pass label,
+.lastname label,
+.firstname label,
+.phone label,
+.address label,
+.postcode label,
+.city label
 {
     text-transform: capitalize;
     font-weight:bold;
     font-family: Arial, Helvetica, sans-serif;
     color:#E9BF7B;
 }
+.email input,
 .username input,
-.pass input
+.pass input,
+.lastname input,
+.firstname input,
+.phone input,
+.address input,
+.postcode input,
+.city input
 {
     width:90%;
     height:33px;

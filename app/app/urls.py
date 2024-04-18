@@ -18,17 +18,17 @@ from django.contrib import admin
 from django.urls import include, path
 
 from BubbleTea.views import (
-    home_page,
-    profile_page,
-    register_page,
-    login_page
+    home,
+    profile,
+    register,
+    login
 )
 
 urlpatterns = [
-    path('', home_page),
-    path('register/', register_page, name="register"),
-    path('login/', login_page, name="login"),
-    path('profile/', profile_page, name="profile"),
+    path('', home),
+    path('register/', register, name="register"),
+    path('login/', login, name="login"),
+    path('profile/', profile, name="profile"),
     path('admin/', admin.site.urls),
 
 ]

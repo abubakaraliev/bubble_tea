@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/login.css">
+    <link rel="stylesheet" href="/static/css/login.css">
     <title>Login</title>
 </head>
+{% load static %}
+
 <body>
     <!-- <h1>This is a Login Page</h1> -->
 
@@ -19,26 +22,26 @@
 
     <div class="content">
         <div class="container">
-                <form method="POST" action="{% url "profile" %}">
-                    {% csrf_token %}
-                    <div class="username">
-                        {{ form.username.label }}
-                        <div class="clear"></div>
-                        {{ form.username }}
-                    </div>
-                    <div class="pass">
-                        {{ form.password.label }}
-                        <div class="clear"></div>
-                        {{ form.password }}
-                    </div>
-                    <div class="submit">
-                        <input type="submit" value="sign in">
-                    </div>
-                    {% for message in messages %}
-                        <p id="messages">{{message}}</p>
-                    {% endfor %}
-                </form>
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                <div class="username">
+                    <label for="username">username</label>
+                    <input type="text" placeholder="Enter username" name="username" id="username" required>
+                </div>
+                <div class="pass">
+                    <label for="password">password</label>
+                    <input type="password" placeholder="Enter password" name="password" id="password" required>
+                </div>
+                <div class="submit">
+                    <input type="submit" value="sign in">
+                </div>
+                {% for message in messages %}
+                <p id="messages">{{message}}</p>
+                {% endfor %}
+            </form>
+            <span class="got-noaccount"><a href="{% url 'register' %}">got no account ?</a></span>
         </div>
     </div>
 </body>
+
 </html>

@@ -1,64 +1,73 @@
-from django.shortcuts import render, redirect
 from .models import *
-from .forms import CreateUserForm, LoginUserForm, ProfileUserForm
+from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import login, logout
+from django.db import connection
+from .forms import LoginUserForm, CreateUserForm, AccountUserForm ,ProfileUserForm
 
-# Create your views here.
-
-def home_page(request):
-    # print(request.headers)
+def home(request):
     return render(request, "index.html", {})
 
-def register_page(request):
-    # print(request.headers)
+def register(request):
     form = CreateUserForm()
-    
-    if  request.method == 'POST':
+    if request.method == 'POST':
         form = CreateUserForm(request.POST)
         if form.is_valid():
-            form.save()
-            user = form.cleaned_data.get('username')
-            messages.success(request, 'Account created for ' + user)
+            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
+
+            with connection.cursor() as cursor:
+                cursor.execute("INSERT INTO Users(username, email, password) VALUES (%s, %s, %s)", [username, email, password])
+            
+            messages.success(request, f'Account created for {username}')
             return redirect('login')
-    
-    context = {'form':form}
+
+        else:
+            form = CreateUserForm()
+            messages.info(request, 'Wrong inputs !')
+    context = {'form': form}
     return render(request, "register.html", context)
 
-def login_page(request):
+def login(request):
     form = LoginUserForm()
-    
     if request.method == 'POST':
         form = LoginUserForm(data=request.POST)
         if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            
-            user_profile_data = {
-                'username': user.username,
-                'email': user.email
-            }
-            request.session['user_profile_data'] = user_profile_data
-            return redirect('profile')
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+           
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM Users WHERE username = %s", [username])
+                user = cursor.fetchone()
+            if user:
+                user_profile_data = {
+                    'username': username,
+                    'password': password
+                }
+                request.session['user_profile_data'] = user_profile_data
+                return redirect('profile')
+            else:
+                messages.error(request, 'Email or Password is incorrect!')
         else:
-            form = LoginUserForm()
-            messages.info(request, 'Email OR Password is incorrect !')
+            messages.error(request, 'Form is not valid!')
             
-    context = {'form':form}
+    context = {'form': form}
     return render(request, "login.html", context)
 
-def profile_page(request):
-    # print(request.headers)
-    
-    user_profile_data = request.session.get('user_profile_data', {})
+
+def profile(request):
+    form = CreateUserForm()
+
     if request.method == 'POST':
-        form = ProfileUserForm(data=request.POST)
+        form = CreateUserForm(request.POST)
         if form.is_valid():
-            user_profile_data.update(form.cleaned_data)
-            request.session['user_profile_data'] = user_profile_data
-            messages.success(request, 'Profile has been updated !')
+            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
+            with connection.cursor() as cursor:
+                cursor.execute("UPDATE Users SET email = %s, password = %s WHERE username = %s", [email, password, username])
+            messages.success(request, 'Profile updated successfully')
             return redirect('profile')
-    else:
-        form = ProfileUserForm(initial=user_profile_data)
-    context = {'form':form }
+
+    context = {'form': form}
     return render(request, "profile.html", context)
