@@ -3,6 +3,11 @@ from .models import *
 from .forms import CreateUserForm, LoginUserForm, ProfileUserForm
 from django.contrib import messages
 from django.contrib.auth import login, logout
+from django.http import HttpResponse, JsonResponse
+from django.db import connection
+import json
+from django.views.decorators.csrf import csrf_exempt
+
 
 # Create your views here.
 
@@ -62,3 +67,52 @@ def profile_page(request):
         form = ProfileUserForm(initial=user_profile_data)
     context = {'form':form }
     return render(request, "profile.html", context)
+
+def shop_page(request):
+    # print(request.headers)
+    return render(request, "shop.html", {})
+
+@csrf_exempt
+def products(request):
+    if request.method == 'GET':
+        cursor = connection.cursor()
+        cursor.execute('SELECT * FROM products')
+        data = cursor.fetchall()
+        print((data))
+        columns = [col[0] for col in cursor.description]
+        data = [dict(zip(columns, row)) for row in data]
+        to_json = json.dumps(data, indent=2)
+        print(to_json)
+        return HttpResponse(to_json, content_type='application/json')
+    
+    elif request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        print(body['identifier'])
+        cursor = connection.cursor()
+        cursor.execute('INSERT INTO products (identifier, price) VALUES (%s, %s)', [body['identifier'], body['price']])
+        return HttpResponse('Product created', content_type='application/json')
+
+@csrf_exempt
+def get_one_product(request, id):
+    print(id)
+    if request.method == 'GET':
+        cursor = connection.cursor()
+        cursor.execute('SELECT * FROM products WHERE id = %s', [id])
+        data = cursor.fetchall()
+        columns = [col[0] for col in cursor.description]
+        data = [dict(zip(columns, row)) for row in data]
+        
+        to_json = json.dumps(data, indent=2)
+        print(to_json)
+        return HttpResponse(to_json, content_type='application/json') #CREATE JSON
+    elif request.method == 'DELETE':
+        cursor = connection.cursor()
+        cursor.execute('DELETE FROM products WHERE id = %s', [id])
+        return HttpResponse('Product deleted', content_type='application/json')
+    elif request.method == 'PUT':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        cursor = connection.cursor()
+        cursor.execute('UPDATE products SET identifier = %s, price = %s WHERE id = %s', [body['identifier'], body['price'], id])
+        return HttpResponse('Product updated', content_type='application/json')
