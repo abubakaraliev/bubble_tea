@@ -73,5 +73,3 @@ def profile(request):
 
     context = {'form': form}
     return render(request, "profile.html", context)
-from django.http import HttpResponse
-import jwt
