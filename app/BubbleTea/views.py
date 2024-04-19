@@ -96,7 +96,7 @@ def profile(request):
     try:
         payload = jwt.decode(access_token, secret_key, algorithms=[algorithm])
         username = payload['username']
-
+        print(username)
         form = CreateUserForm()
 
         if request.method == 'POST':
@@ -123,6 +123,31 @@ def profile(request):
 def shop_page(request):
     # print(request.headers)
     return render(request, "shop.html", {})
+
+def auth(request):
+    response = {
+            "authorized": False,
+    }
+    access_token = request.COOKIES.get('access_token')
+    if not access_token:
+        return HttpResponse(json.dumps(response), content_type='application/json', status=401)
+
+    secret_key = "secret"
+    algorithm = "HS256"
+
+    try:
+        payload = jwt.decode(access_token, secret_key, algorithms=[algorithm])
+        username = payload['username']
+        response = {
+            "authorized": True,
+            "username": username,
+            "token": access_token
+        }
+        return HttpResponse(json.dumps(response), content_type='application/json', status=200)
+    except:
+        return HttpResponse(json.dumps(response), content_type='application/json', status=401)
+        
+    
 
 @csrf_exempt
 def products(request):

@@ -25,6 +25,7 @@ from BubbleTea.views import (
     shop_page,
     products,
     get_one_product,
+    auth,
 )
 
 urlpatterns = [
@@ -34,6 +35,7 @@ urlpatterns = [
     path('profile/', profile, name="profile"),
     path('admin/', admin.site.urls),
     path('shop/', shop_page, name="shop"),
+    path('auth/', auth, name="auth"),
     
     
     # products routes
