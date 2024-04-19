@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `Users`(
 
 CREATE TABLE IF NOT EXISTS `Orders`(
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user INT NOT NULL,
+    user VARCHAR(255) NOT NULL,
     product_id INT NOT NULL,
     sugar INT NOT NULL,
     quantity INT NOT NULL,
