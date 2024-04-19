@@ -1,7 +1,6 @@
 from django.db import models
 import uuid
 
-<<<<<<< HEAD
 class newUser(models.Model):
     # user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = models.CharField(max_length=100)
@@ -24,7 +23,6 @@ class userInformations (models.Model):
     address = models.CharField(max_length=100)
     postcode = models.CharField(max_length=30)
     city = models.CharField(max_length=30)
-=======
 # Create your models here.
 
 class Products(models.Model):
@@ -32,4 +30,3 @@ class Products(models.Model):
     identifier = models.CharField(max_length=255),
     price = models.DecimalField(max_digits=10, decimal_places=2),
     is_available = models.BooleanField(default=True),
->>>>>>> yassine
