@@ -88,6 +88,53 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
+=======
+
+    <div class="content">
+        <div class="container">
+            <form method="POST" action="{% url 'profile' %}">
+                {% csrf_token %}
+                <div class="username">
+                    {{ form.username.label }}
+                    <div class="clear"></div>
+                    {{ form.username }}
+                </div>
+                <div class="email">
+                    {{ form.email.label }}
+                    <div class="clear"></div>
+                    {{ form.email }}
+                </div>
+                <div class="phone">
+                    {{ form.phone.label }}
+                    <div class="clear"></div>
+                    {{ form.phone }}
+                </div>
+                <div class="address">
+                    {{ form.address.label }}
+                    <div class="clear"></div>
+                    {{ form.address }}
+                </div>
+                <div class="postcode">
+                    {{ form.postcode.label }}
+                    <div class="clear"></div>
+                    {{ form.postcode }}
+                </div>
+                <div class="city">
+                    {{ form.city.label }}
+                    <div class="clear"></div>
+                    {{ form.city }}
+                </div>
+                <div class="submit">
+                    <input type="submit" value="Submit">
+                </div>
+                {% for message in messages %}
+                <p id="messages">{{ message }}</p>
+                {% endfor %}
+            </form>
+        </div>
+    </div>
+>>>>>>> yassine
 </body>
 
 </html>

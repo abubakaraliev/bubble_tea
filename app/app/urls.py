@@ -18,10 +18,20 @@ from django.contrib import admin
 from django.urls import include, path
 
 from BubbleTea.views import (
+<<<<<<< HEAD
     home,
     profile,
     register,
     login
+=======
+    home_page,
+    profile_page,
+    register_page,
+    login_page,
+    shop_page,
+    products,
+    get_one_product,
+>>>>>>> yassine
 )
 
 urlpatterns = [
@@ -30,5 +40,10 @@ urlpatterns = [
     path('login/', login, name="login"),
     path('profile/', profile, name="profile"),
     path('admin/', admin.site.urls),
-
+    path('shop/', shop_page, name="shop"),
+    
+    
+    # products routes
+    path('products/', products, name='products'),
+    path('products/<int:id>', get_one_product, name='get_one_product'),
 ]
