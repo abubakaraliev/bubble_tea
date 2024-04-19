@@ -19,10 +19,10 @@ from django.urls import include, path
 
 from BubbleTea.views import (
     home,
-    profile,
+    account,
+    delivery,
     register,
     login,
-    shop_page,
     products,
     get_one_product,
 )
@@ -31,10 +31,9 @@ urlpatterns = [
     path('', home),
     path('register/', register, name="register"),
     path('login/', login, name="login"),
-    path('profile/', profile, name="profile"),
+    path('account-settings/', account, name="account"),
+    path('delivery-informations/', delivery, name="delivery"),
     path('admin/', admin.site.urls),
-    path('shop/', shop_page, name="shop"),
-    
     
     # products routes
     path('products/', products, name='products'),

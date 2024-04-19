@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/global.css">
+    <title>Account</title>
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <div class="content">
+            <div class="head">
+                <div class="container">
+                    <div class="title">
+                        <h1>Account Settings</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <form method="POST" action="{% url 'account' %}">
+                    {% csrf_token %}
+                    <div class="username">
+                        <label for="username">username</label>
+                        <input type="text" placeholder="Enter username" name="username" id="username" required>
+                    </div>
+                    <div class="email">
+                        <label for="email">email</label>
+                        <input type="email" placeholder="Enter Email" name="email" id="email" required>
+                    </div>
+                    <div class="pass">
+                        <label for="password">password</label>
+                        <input type="password" placeholder="Enter password" name="password" id="password" required>
+                    </div>
+                    <div class="submit-wrapper">
+                        <div class="submit">
+                            <input type="submit" value="Update">
+                        </div>
+                        <div class="delete">
+                            <input type="submit" value="Delete account">
+                        </div>
+                    </div>
+                    {% for message in messages %}
+                    <p id="messages">{{ message }}</p>
+                    {% endfor %}
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

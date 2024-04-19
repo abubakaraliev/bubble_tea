@@ -15,6 +15,15 @@ CREATE TABLE IF NOT EXISTS `Users`(
     `email` VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS `Users_informations`(
+    `lastname` VARCHAR(255) NOT NULL PRIMARY KEY,
+    `firstname` VARCHAR(255) NOT NULL,
+    `phone` INTEGER NOT NULL,
+    `address` VARCHAR(255) NOT NULL,
+    `postcode` INTEGER NOT NULL,
+    `city` VARCHAR(255) NOT NULL,
+);
+
 CREATE TABLE IF NOT EXISTS `Orders`(
     id INT AUTO_INCREMENT PRIMARY KEY,
     user VARCHAR(255) NOT NULL,
