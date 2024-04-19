@@ -2,7 +2,7 @@ from .models import *
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db import connection
-from .forms import LoginUserForm, CreateUserForm
+from .forms import LoginUserForm, CreateUserForm, InformationsUserForm
 import bcrypt
 import jwt
 from django.http import HttpResponse
@@ -53,13 +53,10 @@ def login(request):
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
-            
-            print(username, password)
-
+        
             with connection.cursor() as cursor:
                 cursor.execute("SELECT * FROM Users WHERE username = %s", [username])
                 user = cursor.fetchone()
-            print(user)    
             if user:
                 hashed_password = user[1]
                 if bcrypt.checkpw(password.encode('utf-8'), hashed_password.encode('utf-8')):
@@ -68,10 +65,8 @@ def login(request):
                     algorithm = "HS256"
 
                     encoded_token = jwt.encode(payload, secret_key, algorithm=algorithm)
-                    print("--- TOKEN ---\n", encoded_token)
-                    print("--- TOKEN ---")
                     
-                    response = redirect('profile')
+                    response = redirect('account')
                     response.set_cookie('access_token', encoded_token)
                     return response
                 else:
@@ -85,7 +80,7 @@ def login(request):
     context = {'form': form}
     return render(request, "login.html", context)
 
-def profile(request):
+def account(request):
     access_token = request.COOKIES.get('access_token')
     if not access_token:
         return redirect('login')
@@ -98,19 +93,26 @@ def profile(request):
         username = payload['username']
 
         form = CreateUserForm()
-
         if request.method == 'POST':
             form = CreateUserForm(request.POST)
             if form.is_valid():
+                username = form.cleaned_data.get('username')
                 email = form.cleaned_data.get('email')
                 password = form.cleaned_data.get('password')
+                
+                hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+                
                 with connection.cursor() as cursor:
-                    cursor.execute("UPDATE Users SET email = %s, password = %s WHERE username = %s", [email, password, username])
+                    cursor.execute("UPDATE Users SET email = %s, password = %s WHERE username = %s", [email, hashed_password.decode('utf-8'), username])
                 messages.success(request, 'Profile updated successfully')
-                return redirect('profile')
-
+                return redirect('account')
+            
+            else:
+                form = CreateUserForm()
+                messages.info(request, 'Wrong inputs!')
+            
         context = {'form': form}
-        return render(request, "profile.html", context)
+        return render(request, "account.html", context)
 
     except jwt.ExpiredSignatureError:
         messages.error(request, 'Your session has expired. Please log in again.')
@@ -120,15 +122,42 @@ def profile(request):
         messages.error(request, 'Invalid token. Please log in again.')
         return redirect('login')
 
-def shop_page(request):
-    # print(request.headers)
-    return render(request, "shop.html", {})
+def delivery(request):
+    form = InformationsUserForm()
+
+    if request.method == 'POST':
+        form = InformationsUserForm(request.POST)
+        if form.is_valid():
+            lastname = form.cleaned_data.get('lastname')
+            firstname = form.cleaned_data.get('firstname')
+            phone = form.cleaned_data.get('phone')
+            address = form.cleaned_data.get('address')
+            postcode = form.cleaned_data.get('postcode')
+            city = form.cleaned_data.get('city')
+            
+            print(lastname, firstname, phone, address, postcode, city)
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "INSERT INTO Users_informations(lastname, firstname, phone, address, postcode, city) VALUES (%s, %s, %s ,%s, %s, %s)",
+                    [lastname, firstname, phone, address, postcode, city]
+                )
+            
+            messages.success(request, f' delivery informations have been registered for {firstname}')
+            return redirect('delivery')
+            
+        else:
+            form = InformationsUserForm()
+            messages.info(request, 'Wrong inputs!')
+
+    context = {'form': form}
+    return render(request, "delivery.html", context)
 
 @csrf_exempt
 def products(request):
     if request.method == 'GET':
         cursor = connection.cursor()
-        cursor.execute('SELECT * FROM products')
+        cursor.execute('SELECT * FROM Products')
         data = cursor.fetchall()
         print((data))
         columns = [col[0] for col in cursor.description]
@@ -142,7 +171,7 @@ def products(request):
         body = json.loads(body_unicode)
         print(body['identifier'])
         cursor = connection.cursor()
-        cursor.execute('INSERT INTO products (identifier, price) VALUES (%s, %s)', [body['identifier'], body['price']])
+        cursor.execute('INSERT INTO Products (identifier, price) VALUES (%s, %s)', [body['identifier'], body['price']])
         return HttpResponse('Product created', content_type='application/json')
 
 @csrf_exempt
@@ -150,7 +179,7 @@ def get_one_product(request, id):
     print(id)
     if request.method == 'GET':
         cursor = connection.cursor()
-        cursor.execute('SELECT * FROM products WHERE id = %s', [id])
+        cursor.execute('SELECT * FROM Products WHERE id = %s', [id])
         data = cursor.fetchall()
         columns = [col[0] for col in cursor.description]
         data = [dict(zip(columns, row)) for row in data]
@@ -160,11 +189,11 @@ def get_one_product(request, id):
         return HttpResponse(to_json, content_type='application/json') #CREATE JSON
     elif request.method == 'DELETE':
         cursor = connection.cursor()
-        cursor.execute('DELETE FROM products WHERE id = %s', [id])
+        cursor.execute('DELETE FROM Products WHERE id = %s', [id])
         return HttpResponse('Product deleted', content_type='application/json')
     elif request.method == 'PUT':
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
         cursor = connection.cursor()
-        cursor.execute('UPDATE products SET identifier = %s, price = %s WHERE id = %s', [body['identifier'], body['price'], id])
+        cursor.execute('UPDATE Products SET identifier = %s, price = %s WHERE id = %s', [body['identifier'], body['price'], id])
         return HttpResponse('Product updated', content_type='application/json')
