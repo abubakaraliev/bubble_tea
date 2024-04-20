@@ -10,8 +10,10 @@
 </head>
 
 <body>
-
-    <div class="wrapper">
+    {% for message in messages %}
+    <p id="messages">{{ message }}</p>
+    {% endfor %}
+    <div class="wrapper-delivery">
         <div class="content">
             <div class="head">
                 <div class="container">
@@ -50,12 +52,10 @@
                     <div class="submit">
                         <input type="submit" value="Submit">
                     </div>
-                    {% for message in messages %}
-                    <p id="messages">{{ message }}</p>
-                    {% endfor %}
                 </form>
             </div>
         </div>
+        <a href="{% url 'account' %}">Return back to account</a>
     </div>
 </body>
 

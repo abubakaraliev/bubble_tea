@@ -10,7 +10,9 @@
 </head>
 
 <body>
-
+    {% for message in messages %}
+    <p id="messages">{{ message }}</p>
+    {% endfor %}
     <div class="head">
         <div class="container">
             <div class="title">
@@ -39,9 +41,6 @@
                 <div class="submit">
                     <input type="submit" value="Sign up">
                 </div>
-                {% for message in messages %}
-                <p id="messages">{{message}}</p>
-                {% endfor %}
             </form>
             <span class="got-account"><a href="{% url 'login' %}">got no account ?</a></span>
         </div>
