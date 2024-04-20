@@ -24,3 +24,12 @@ CREATE TABLE IF NOT EXISTS `Orders`(
     FOREIGN KEY (user) REFERENCES Users(username),
     FOREIGN KEY (product_id) REFERENCES Products(id)
 );
+CREATE TABLE IF NOT EXISTS `UserInformation` (
+    `username` VARCHAR(255) NOT NULL,
+    `first_name` VARCHAR(255) NOT NULL,
+    `last_name` VARCHAR(255) NOT NULL,
+    `address` VARCHAR(255) NOT NULL,
+    `phone_number` VARCHAR(255),
+    PRIMARY KEY (`username`),
+    FOREIGN KEY (`username`) REFERENCES `Users`(`username`) ON DELETE CASCADE
+);
