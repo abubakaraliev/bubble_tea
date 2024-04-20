@@ -68,6 +68,8 @@ def login(request):
                     
                     response = redirect('account')
                     response.set_cookie('access_token', encoded_token)
+                    response.set_cookie('username', username)
+                    
                     return response
                 else:
                     messages.error(request, 'Incorrect password!')
@@ -80,6 +82,13 @@ def login(request):
     context = {'form': form}
     return render(request, "login.html", context)
 
+def remove(request, username):
+    if request.method == 'GET':
+        with connection.cursor() as cursor:
+            cursor.execute('DELETE FROM Users WHERE username = %s', [username])
+        messages.success(request, 'Account deleted successfully')
+    return render(request, "login.html")
+
 def account(request):
     access_token = request.COOKIES.get('access_token')
     if not access_token:
@@ -88,40 +97,31 @@ def account(request):
     secret_key = "secret"
     algorithm = "HS256"
 
-    try:
-        payload = jwt.decode(access_token, secret_key, algorithms=[algorithm])
-        username = payload['username']
+    payload = jwt.decode(access_token, secret_key, algorithms=[algorithm])
+    username = payload['username']
 
-        form = CreateUserForm()
-        if request.method == 'POST':
-            form = CreateUserForm(request.POST)
-            if form.is_valid():
-                username = form.cleaned_data.get('username')
-                email = form.cleaned_data.get('email')
-                password = form.cleaned_data.get('password')
-                
-                hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-                
-                with connection.cursor() as cursor:
-                    cursor.execute("UPDATE Users SET email = %s, password = %s WHERE username = %s", [email, hashed_password.decode('utf-8'), username])
-                messages.success(request, 'Profile updated successfully')
-                return redirect('account')
+    form = CreateUserForm()
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
             
-            else:
-                form = CreateUserForm()
-                messages.info(request, 'Wrong inputs!')
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
             
-        context = {'form': form}
-        return render(request, "account.html", context)
-
-    except jwt.ExpiredSignatureError:
-        messages.error(request, 'Your session has expired. Please log in again.')
-        return redirect('login')
-
-    except jwt.InvalidTokenError:
-        messages.error(request, 'Invalid token. Please log in again.')
-        return redirect('login')
-
+            with connection.cursor() as cursor:
+                cursor.execute("UPDATE Users SET email = %s, password = %s WHERE username = %s", [email, hashed_password.decode('utf-8'), username])
+            messages.success(request, 'Profile updated successfully')
+            return redirect('account')
+        
+        else:
+            form = CreateUserForm()
+            messages.info(request, 'Wrong inputs!')
+            
+    context = {'form': form}
+    return render(request, "account.html", context)
+           
 def delivery(request):
     form = InformationsUserForm()
 
