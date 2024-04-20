@@ -5,12 +5,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/nav.css">
     <link rel="stylesheet" href="/static/css/global.css">
     <title>Account</title>
 </head>
 
 <body>
-
     <div class="wrapper">
         <div class="content">
             <div class="head">
@@ -40,16 +40,28 @@
                             <input type="submit" value="Update">
                         </div>
                         <div class="delete">
-                            <input type="submit" value="Delete account">
+                            <script>
+                                function handleClick() {
+                                    const cookieValue = document.cookie
+                                        .split("; ")
+                                        .find((row) => row.startsWith("username="))
+                                        ?.split("=")[1];
+                                    window.location.replace('http://localhost:8000/delete/' + cookieValue)
+                                }
+                            </script>
                         </div>
                     </div>
                     {% for message in messages %}
                     <p id="messages">{{ message }}</p>
                     {% endfor %}
                 </form>
+                <button value="Delete" onclick="handleClick()">Delete</button>
+
             </div>
         </div>
     </div>
+
+    <script src="{% static 'js/script.js' %}"></script>
 </body>
 
 </html>

@@ -22,6 +22,7 @@ from BubbleTea.views import (
     account,
     delivery,
     register,
+    remove,
     login,
     products,
     get_one_product,
@@ -32,6 +33,7 @@ urlpatterns = [
     path('register/', register, name="register"),
     path('login/', login, name="login"),
     path('account-settings/', account, name="account"),
+    path('delete/<str:username>', remove, name="remove"),
     path('delivery-informations/', delivery, name="delivery"),
     path('admin/', admin.site.urls),
     
