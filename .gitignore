@@ -1,5 +1,1 @@
-__pycache__/
-__pycache__/*
-.env
-habibtea.png
-db.sql
+db.sql habibtea.png
